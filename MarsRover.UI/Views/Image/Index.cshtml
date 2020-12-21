@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Query photos by uploading a text file that contains 1 date per line.</h2>
+
+@using (Html.BeginForm("ProcessTextFile", "Image", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div>
+        @Html.TextBox("file", "", new { type = "file" }) <br />
+
+        <input type="submit" value="Upload" />
+
+        <div style="color:red">@TempData["errorMsg"]</div>
+
+    </div>
+}  

@@ -1,0 +1,59 @@
+﻿@model PagedList.IPagedList<MarsRover.UI.ViewModels.ImageViewViewModel>
+@using PagedList.Mvc;
+@using System.Configuration;
+
+@{
+    ViewBag.Title = "View Images";
+}
+
+@using (Html.BeginForm("ViewImages", "Image", FormMethod.Get))
+{
+    <br />
+    <p>
+        Search: @Html.TextBox("searchData", ViewBag.FilterValue as string)
+        <input type="submit" value="Find" />
+    </p>
+}
+
+@if (Model == null || !Model.Any())
+{
+    <p>No Records Found.</p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.ActionLink("ID", "ViewImages", new { sortingOrder = ViewBag.SortingID, filterValue = ViewBag.FilterValue })
+            </th>
+            <th>
+                @Html.ActionLink("Date", "ViewImages", new { sortingOrder = ViewBag.SortingDate, filterValue = ViewBag.FilterValue })
+            </th>
+            <th>
+                Image
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr id="row-@item.Id">
+                <td>
+                    @Html.DisplayFor(model => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Date)
+                </td>
+                <td>
+                    <img src="@item.ImageSRC" alt="@item.Id" width="@ConfigurationManager.AppSettings["ImageWidth"]" height="@ConfigurationManager.AppSettings["ImageHeight"]" />
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <br />
+    @:Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, pageNo => Url.Action("ViewImages",
+        new { pageNo, sortingOrder = ViewBag.CurrentSortOrder, filterValue = ViewBag.FilterValue }))
+
+}
